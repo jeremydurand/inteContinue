@@ -1,0 +1,6 @@
+# IntelliJ files
+.idea/
+BarbarianPrince.iml
+
+# Build directory
+out/
