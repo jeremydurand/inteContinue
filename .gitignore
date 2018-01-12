@@ -5,3 +5,10 @@ BarbarianPrince.iml
 # Build directory
 out/
 /bin/
+
+# Eclipse
+
+.classpath
+
+.project
+
