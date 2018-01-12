@@ -8,11 +8,11 @@ import java.awt.event.*;
 import java.awt.Point;
 
 /**
- * Classe qui dessine le BoardPanel de jeu. Le mécanisme de gestion des
- * hexagones se trouve dans le fichier HexagonalUtils.java
- * 
- * @author benoi
+ * Classe qui dessine le BoardPanel de jeu. 
  *
+ * Le mÃ©canisme de gestion des hexagones se trouve dans le fichier HexagonalUtils.java
+ * 
+ * @author benoit
  */
 public class Board {
 
@@ -21,15 +21,15 @@ public class Board {
 	private ImageIcon icon = new ImageIcon(getClass().getResource("/images/avatar_frame.png"));
 
 	/**
-	 * Constructeur de la classe board initialisation des variables et création du plateau de jeu
+	 * Constructeur de la classe board initialisation des variables et crÃ©ation du plateau de jeu
 	 */
 	private Board() {
 		createAndShowGUI();
 	}
 
 	/**
-	 * Méthode de lancement, elle est a enlever car c'est le game manager qui
-	 * l'exécutera
+	 * MÃ©thode de lancement, elle est a enlever car c'est le game manager qui
+	 * l'exÃ©cutera
 	 * 
 	 * @param args
 	 */
@@ -42,13 +42,13 @@ public class Board {
 	}
 
 	/**
-	 * Création de l'interface
+	 * CrÃ©ation de l'interface
 	 */
 	private void createAndShowGUI() {
 
 		JFrame frame = new JFrame("Barbarian Prince");
 
-		// paramétrage de la fenetre
+		// paramÃ©trage de la fenetre
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
 		int taskBarSize = scnMax.bottom;
@@ -67,21 +67,21 @@ public class Board {
 
 		JScrollPane scroll = new JScrollPane(panel);
 
-		// déplacement avec les fleches de haut en bas
+		// dÃ©placement avec les fleches de haut en bas
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		vertical.setUnitIncrement(16);
 		InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
 		imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
 
-		// déplacement avec les fleches de gauche a droite
+		// dÃ©placement avec les fleches de gauche a droite
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
 		horizontal.setUnitIncrement(16);
 		InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
 		imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
 
-		// le mouse drag pour se déplacer sur la carte
+		// le mouse drag pour se dÃ©placer sur la carte
 		MouseAdapter ma = new MouseAdapter() {
 
 			private Point origin;
@@ -117,7 +117,7 @@ public class Board {
 		panel.addMouseListener(ma);
 		panel.addMouseMotionListener(ma);
 		
-		// un listener pour réagir en cas de changement de la taille de la fenetre
+		// un listener pour rÃ©agir en cas de changement de la taille de la fenetre
 		frame.addComponentListener(new ComponentListener() {
 			@Override
 			public void componentHidden(ComponentEvent arg0) {
