@@ -125,7 +125,7 @@ public class HexagonalUtils {
 		int x = i * (s + t);
 		int y = j * h + (i % 2) * h / 2;
 		Polygon poly = hex(x, y);
-		g2.setColor(Board.COLOURGRID);//couleur de contour en noir
+		g2.setColor(BoardPanel.COLOURGRID);//couleur de contour en noir
 		g2.drawPolygon(poly);
 		//si l'image est null il ne s'agit pas de la case ou le personnage se situe
 		if (icon != null) {
@@ -150,11 +150,11 @@ public class HexagonalUtils {
 		//on laisse apparaitre la carte derriere grace a lopacité
 		g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
 		if (n == 0) {
-			g2.setColor(Board.COLOURORWRONG);
+			g2.setColor(BoardPanel.COLOURORWRONG);
 			g2.fillPolygon(hex(x,y));
 		}
 		if (n == 1) {
-			g2.setColor(Board.COLOURRIGHT);
+			g2.setColor(BoardPanel.COLOURRIGHT);
 			g2.fillPolygon(hex(x,y));
 		}
 		g2.setComposite(AlphaComposite.SrcOver);
