@@ -4,9 +4,10 @@ import javax.swing.*;
 
 import java.awt.Point;
 
-/* This is a companion class to hexgame.java. It handles all of the mechanics related to hexagon grids. */
+/* This is a companion class to hexgame.java. It handles all of the mechanics related to hexagon grids. 
+ * https://gist.github.com/salamander2/4329783 */
 
-public class Hexmech {
+public class HexagonalUtils {
 	/*
 	 * Helpful references:
 	 * http://www.codeproject.com/Articles/14948/Hexagonal-grid-for-games-and-other-

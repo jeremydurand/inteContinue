@@ -1,4 +1,5 @@
 package Game.Board;
+
 import java.awt.*;
 
 import javax.swing.*;
@@ -6,14 +7,15 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.Point;
 
-/**********************************
- * This is the main class of a Java program to play a game based on hexagonal
- * tiles. The mechanism of handling hexes is in the file hexmech.java.
+
+/**
+ * Classe qui dessine le plateau de jeu. Le mécanisme de gestion des hexagones
+ * se trouve dans le fichier HexagonalUtils.java.
  * 
  * Ecrit par benoit jaouen 11/01/2018
- * 
- ***********************************/
-
+ * @author benoi
+ *
+ */
 public class Board {
 
 	// constants and global variables
@@ -47,17 +49,17 @@ public class Board {
 
 	}
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new Board();
 			}
 		});
-	}*/
+	}
 
 	void initGame() {
-		Hexmech.setXYasVertex(true); // RECOMMENDED: leave this as FALSE.
-		Hexmech.setHeight(HEXSIZE);// Either setHeight or setSize must be run to initialize the hex
+		HexagonalUtils.setXYasVertex(true); // RECOMMENDED: leave this as FALSE.
+		HexagonalUtils.setHeight(HEXSIZE);// Either setHeight or setSize must be run to initialize the hex
 		for (int i = 0; i < WIDTH_SIZE; i++) {
 			for (int j = 0; j < HEIGH_SIZE; j++) {
 				board[i][j] = -1;
@@ -181,10 +183,10 @@ public class Board {
 			// s'ajuster avec la carte
 			if (frameWidth > mapWidth) {
 				BORDERX = (frameWidth - mapWidth) / 2;
-				Hexmech.setBorders(BORDERX, BORDERY);
+				HexagonalUtils.setBorders(BORDERX, BORDERY);
 			} else {
-				BORDERX = 5;
-				Hexmech.setBorders(BORDERX, BORDERY);
+				BORDERX = 20;
+				HexagonalUtils.setBorders(BORDERX, BORDERY);
 			}
 
 			Graphics2D g2 = (Graphics2D) g;
@@ -208,37 +210,58 @@ public class Board {
 			}
 
 			repaint();
+			for (int i = 0; i < WIDTH_SIZE; i++) {
+				for (int j = 0; j < HEIGH_SIZE; j++) {
+					if(board[i][j] != 0) {						
+						board[i][j] = -1;
+					}
+				}
+			}
+			neighbour(avatarX, avatarY, 1);
 			// dessin des hexagones
 			for (int i = 0; i < WIDTH_SIZE; i++) {
 				for (int j = 0; j < HEIGH_SIZE; j++) {
 					// l'avatar n'apparaitra qu'a la position qu'on lui a fixé
 					if (i == avatarX && avatarY == j) {
-						Hexmech.drawHex(i, j, g2, avatar);
+						HexagonalUtils.drawHex(i, j, g2, avatar);
 					} else {
-						Hexmech.drawHex(i, j, g2, null);
+						HexagonalUtils.drawHex(i, j, g2, null);
 					}
-					Hexmech.fillHex(i, j, board[i][j], g2);
+					HexagonalUtils.fillHex(i, j, board[i][j], g2);
 				}
 			}
 		}
 
 		class MyMouseListener extends MouseAdapter {
 			public void mouseClicked(MouseEvent e) {
-				Point p = new Point(Hexmech.pxtoHex(e.getX(), e.getY()));
+
+				Point p = new Point(HexagonalUtils.pxtoHex(e.getX(), e.getY()));
 				if (p.x < 0 || p.y < 0 || p.x >= WIDTH_SIZE || p.y >= HEIGH_SIZE)
 					return;
 
 				// les coordonnées de l'avatar sont celles a l'origine du clic de la souris
-				avatarX = p.x;
-				avatarY = p.y;
+				if (board[p.x][p.y] == 1) {
+					avatarX = p.x;
+					avatarY = p.y;
+				}
 
+				/*
+				 * JViewport viewPort = (JViewport)
+				 * SwingUtilities.getAncestorOfClass(JViewport.class, panel); if (viewPort !=
+				 * null) {
+				 * 
+				 * Rectangle view = viewPort.getViewRect(); view.x = p.x+e.getX(); view.y =
+				 * p.y+e.getY();
+				 * 
+				 * panel.scrollRectToVisible(view); }
+				 */
 				// on redessine le plateau avec la nouvelle position de l'avatar
 				repaint();
 			}
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				update(e);
+				// update(e);
 			}
 
 			@Override
@@ -247,60 +270,61 @@ public class Board {
 			}
 
 			private void update(MouseEvent e) {
-				for (int i = 0; i < WIDTH_SIZE; i++) {
-					for (int j = 0; j < HEIGH_SIZE; j++) {
-						board[i][j] = -1;
-					}
-				}
-				Point p = new Point(Hexmech.pxtoHex(e.getX(), e.getY()));
+				Point p = new Point(HexagonalUtils.pxtoHex(e.getX(), e.getY()));
 				if (p.x < 0 || p.y < 0 || p.x >= WIDTH_SIZE || p.y >= HEIGH_SIZE)
 					return;
-				board[p.x][p.y] = 1;
-				neighbour(p.x, p.y, 1);
+				if(board[p.x ][p.y] != 1) {
+					board[p.x][p.y] = 0;
+				}
 				repaint();
+				// board[p.x][p.y] = 1;
+				// neighbour(p.x, p.y, 1);
+				// repaint();
 			}
 
 		}
 
 		private void neighbour(int x, int y, int n) {
 
-			if (x % 2 == 0) {
-				if (x - 1 > 0 && y - 1 > 0) {
-					board[x - 1][y - 1] = 1;
-				}
-				if (y - 1 > 0) {
-					board[x][y - 1] = 1;
-				}
-				if (x + 1 < WIDTH_SIZE && y - 1 > 0) {
-					board[x + 1][y - 1] = 1;
-				}
-				if (x + 1 < WIDTH_SIZE) {
-					board[x + 1][y] = 1;
-				}
-				if (y + 1 < HEIGH_SIZE) {
-					board[x][y + 1] = 1;
-				}
-				if (x - 1 > 0) {
-					board[x - 1][y] = 1;
-				}
-			} else {
-				if (x - 1 > 0) {
-					board[x - 1][y] = 1;
-				}
-				if (y - 1 > 0) {
-					board[x][y - 1] = 1;
-				}
-				if (x + 1 < WIDTH_SIZE) {
-					board[x + 1][y] = 1;
-				}
-				if (x + 1 < WIDTH_SIZE && y + 1 < HEIGH_SIZE) {
-					board[x + 1][y + 1] = 1;
-				}
-				if (y + 1 < HEIGH_SIZE) {
-					board[x][y + 1] = 1;
-				}
-				if (x - 1 > 0 && y + 1 < HEIGH_SIZE) {
-					board[x - 1][y + 1] = 1;
+			for (int i = 1; i <= n; i++) {
+				if (x % 2 == 0) {
+					if (x - i >= 0 && y - i >= 0) {
+						board[x - i][y - i] = 1;
+					}
+					if (y - i >= 0) {
+						board[x][y - i] =1;
+					}
+					if (x + i < WIDTH_SIZE && y - i >= 0) {
+						board[x + i][y - i] = 1;
+					}
+					if (x + i < WIDTH_SIZE) {
+						board[x + i][y] = 1;
+					}
+					if (y + i < HEIGH_SIZE) {
+						board[x][y + i] = 1;
+					}
+					if (x - i >= 0) {
+						board[x - i][y] = 1;
+					}
+				} else {
+					if (x - i >= 0) {
+						board[x - i][y] = 1;
+					}
+					if (y - i >= 0) {
+						board[x][y - i] = 1;
+					}
+					if (x + i < WIDTH_SIZE) {
+						board[x + i][y] = 1;
+					}
+					if (x + i < WIDTH_SIZE && y + 1 < HEIGH_SIZE) {
+						board[x + i][y + 1] = 1;
+					}
+					if (y + i < HEIGH_SIZE) {
+						board[x][y + i] = 1;
+					}
+					if (x - i >= 0 && y + i < HEIGH_SIZE) {
+						board[x - i][y + i] = 1;
+					}
 				}
 			}
 		}
