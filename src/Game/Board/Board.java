@@ -7,12 +7,10 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.Point;
 
-
 /**
  * Classe qui dessine le plateau de jeu. Le mécanisme de gestion des hexagones
- * se trouve dans le fichier HexagonalUtils.java.
+ * se trouve dans le fichier HexagonalUtils.java
  * 
- * Ecrit par benoit jaouen 11/01/2018
  * @author benoi
  *
  */
@@ -32,7 +30,7 @@ public class Board {
 	int[][] board = new int[WIDTH_SIZE][HEIGH_SIZE];
 	private JFrame frame;
 	private int frameWidth;
-	private DrawingPanel panel;
+	private Plateau panel;
 	private int screenWidth;
 	private int screenHeight;
 	private ImageIcon avatar = new ImageIcon(getClass().getResource("/images/avatar_dark.png"));
@@ -42,13 +40,23 @@ public class Board {
 	private int avatarY = 0;
 	private int mapWidth = map.getIconWidth();
 	private int mapHeight = map.getIconHeight();
+	private Cursor cursor;
 
+	/**
+	 * Constructeur de la classe board
+	 * initialisation des variables et création du plateau de jeu
+	 */
 	private Board() {
 		initGame();
 		createAndShowGUI();
 
 	}
 
+	/**
+	 * Méthode de lancement, elle est a enlever car c'est le game manager qui l'exécutera
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -57,6 +65,9 @@ public class Board {
 		});
 	}
 
+	/**
+	 * Initialisation des Hexagones
+	 */
 	void initGame() {
 		HexagonalUtils.setXYasVertex(true); // RECOMMENDED: leave this as FALSE.
 		HexagonalUtils.setHeight(HEXSIZE);// Either setHeight or setSize must be run to initialize the hex
@@ -67,6 +78,9 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Création de l'interface
+	 */
 	private void createAndShowGUI() {
 
 		frame = new JFrame("Barbarian Prince");
@@ -83,7 +97,7 @@ public class Board {
 		frame.setResizable(true);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setIconImage(icon.getImage());
-		frame.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 		// frame.setUndecorated(true);
 
 		// un listener pour réagir en cas de changement de la taille de la fenetre
@@ -107,7 +121,7 @@ public class Board {
 		});
 
 		// le panel c'est le plateau de jeu (carte + grille + personnage)
-		panel = new DrawingPanel();
+		panel = new Plateau();
 		Dimension mapSize = new Dimension(mapWidth, mapHeight);
 		panel.setBorder(BorderFactory.createLineBorder(Color.red));
 		panel.setPreferredSize(mapSize);
@@ -165,20 +179,32 @@ public class Board {
 		panel.addMouseMotionListener(ma);
 
 		frame.getContentPane().add(scroll);
-
 		frame.setVisible(true);
 	}
 
-	class DrawingPanel extends JPanel {
+	/**
+	 * Classe JPanel qui contient les hexagones et la carte en fond
+	 * 
+	 * @author benoi
+	 *
+	 */
+	class Plateau extends JPanel {
 
-		public DrawingPanel() {
+		/**
+		 * Contructeur, il spécifie un écouteur de base et de mouvement pour les interactions de la souris sur le plateau
+		 */
+		public Plateau() {
 			MyMouseListener ml = new MyMouseListener();
 			addMouseListener(ml);
 			addMouseMotionListener(ml);
 		}
 
+		/**
+		 * Méthode qui dessine le plateau
+		 */
 		public void paintComponent(Graphics g) {
 			frameWidth = frame.getWidth();
+			frame.setCursor(cursor);
 			// la grille sera décallée en fonction de la taille de l'écran pour bien
 			// s'ajuster avec la carte
 			if (frameWidth > mapWidth) {
@@ -212,7 +238,7 @@ public class Board {
 			repaint();
 			for (int i = 0; i < WIDTH_SIZE; i++) {
 				for (int j = 0; j < HEIGH_SIZE; j++) {
-					if(board[i][j] != 0) {						
+					if (board[i][j] != 0) {
 						board[i][j] = -1;
 					}
 				}
@@ -232,7 +258,16 @@ public class Board {
 			}
 		}
 
+		/**
+		 * Classe MouseListener qui écoute toutes les interactions faite par la souris sur le plateau (déplacement clique ect..)
+		 * 
+		 * @author benoi
+		 *
+		 */
 		class MyMouseListener extends MouseAdapter {
+			/**
+			 * Un clique peut déplacer le personnage si la case est assez proche (1 case sans cheval, 2 cases avec cheval)
+			 */
 			public void mouseClicked(MouseEvent e) {
 
 				Point p = new Point(HexagonalUtils.pxtoHex(e.getX(), e.getY()));
@@ -269,13 +304,34 @@ public class Board {
 				update(e);
 			}
 
+			/**
+			 * Mise a jour de l'affichage au niveau de la postion de la souris qui indique si un clique est possible ou non
+			 * 
+			 * @param e
+			 */
 			private void update(MouseEvent e) {
+				for (int i = 0; i < WIDTH_SIZE; i++) {
+					for (int j = 0; j < HEIGH_SIZE; j++) {
+						board[i][j] = -1;
+					}
+				}
+				neighbour(avatarX, avatarY, 1);
 				Point p = new Point(HexagonalUtils.pxtoHex(e.getX(), e.getY()));
 				if (p.x < 0 || p.y < 0 || p.x >= WIDTH_SIZE || p.y >= HEIGH_SIZE)
 					return;
-				if(board[p.x ][p.y] != 1) {
+				if (p.x == avatarX && p.y == avatarY) {
+					cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+				} else if (board[p.x][p.y] == 1) {
+					cursor = new Cursor(Cursor.HAND_CURSOR);
+				} else {
 					board[p.x][p.y] = 0;
+					cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 				}
+				/*
+				 * if (board[p.x][p.y] != 1 && (p.x != avatarX || p.y != avatarY)) {
+				 * board[p.x][p.y] = 0; cursor = new Cursor(Cursor.DEFAULT_CURSOR); }else {
+				 * cursor = new Cursor(Cursor.HAND_CURSOR); }
+				 */
 				repaint();
 				// board[p.x][p.y] = 1;
 				// neighbour(p.x, p.y, 1);
@@ -284,6 +340,15 @@ public class Board {
 
 		}
 
+		/**
+		 * Cette méthode trouve les cases voisines autour du personnage
+		 * 
+		 * TODO : Prend en compte des voisins de rang 2 (avec cheval)
+		 * 
+		 * @param x position x du personnage
+		 * @param y position y du personnage
+		 * @param n rang n de voisins a prendre en compte (1 sans cheval 2 avec)
+		 */
 		private void neighbour(int x, int y, int n) {
 
 			for (int i = 1; i <= n; i++) {
@@ -292,7 +357,7 @@ public class Board {
 						board[x - i][y - i] = 1;
 					}
 					if (y - i >= 0) {
-						board[x][y - i] =1;
+						board[x][y - i] = 1;
 					}
 					if (x + i < WIDTH_SIZE && y - i >= 0) {
 						board[x + i][y - i] = 1;

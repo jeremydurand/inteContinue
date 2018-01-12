@@ -129,7 +129,7 @@ public class HexagonalUtils {
 		g2.drawPolygon(poly);
 		//si l'image est null il ne s'agit pas de la case ou le personnage se situe
 		if (icon != null) {
-			g2.drawImage(icon.getImage(), x+BORDERX, y+10, icon.getIconWidth(), icon.getIconHeight(), null);
+			g2.drawImage(icon.getImage(), x+BORDERX-5, y+15, icon.getIconWidth(), icon.getIconHeight(), icon.getImageObserver());
 		}
 	}
 
