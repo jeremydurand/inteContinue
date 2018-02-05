@@ -89,7 +89,7 @@ public class HexagonalUtils {
 		int x = x0 + BORDERX; // + (XYVertex ? t : 0); //Fix added for XYVertex = true.
 		// NO! Done below in cx= section
 		if (s == 0 || h == 0) {
-			System.out.println("ERREUR: la taille des hexagones n'a pas été paramétrée");
+			System.out.println("ERREUR: la taille des hexagones n'a pas ï¿½tï¿½ paramï¿½trï¿½e");
 			return new Polygon();
 		}
 
@@ -147,7 +147,7 @@ public class HexagonalUtils {
 	public static void fillHex(int i, int j, int n, Graphics2D g2) {
 		int x = i * (s+t);
 		int y = j * h + (i%2) * h/2;
-		//on laisse apparaitre la carte derriere grace a lopacité
+		//on laisse apparaitre la carte derriere grace a lopacitï¿½
 		g2.setComposite(AlphaComposite.SrcOver.derive(0.5f));
 		if (n == 0) {
 			g2.setColor(BoardPanel.COLOURORWRONG);

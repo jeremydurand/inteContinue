@@ -1,7 +1,6 @@
 package Game;
 
 import Game.Events.EventManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Classe gérant l'exécution des tours.
@@ -47,7 +46,6 @@ public class GameManager {
      * Fonction contrôlant le déroulement d'un tour.
      */
     public void play() {
-        throw new NotImplementedException();
     }
 
     /**

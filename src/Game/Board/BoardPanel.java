@@ -24,32 +24,32 @@ import javax.swing.JPanel;
  */
 class BoardPanel extends JPanel {
 
-	// déclarations des couleurs utilisées pour les tuiles
+	// dï¿½clarations des couleurs utilisï¿½es pour les tuiles
 	final static Color COLOURCELL = Color.ORANGE;
 	final static Color COLOURGRID = Color.BLACK;
 	final static Color COLOURRIGHT = Color.GREEN;
 	final static Color COLOURORWRONG = Color.RED;
 	
-	// par défaut le personnage apparait au coordonnées x0 y0
+	// par dï¿½faut le personnage apparait au coordonnï¿½es x0 y0
 	private int avatarX = 0;
 	private int avatarY = 0;
 	private final ImageIcon AVATAR = new ImageIcon(getClass().getResource("/images/avatar_dark.png"));
 	
-	//éléments relatifs à la fenetre
+	//ï¿½lï¿½ments relatifs ï¿½ la fenetre
 	private JFrame frame; 
 	private int frameWidth;
 	private Cursor cursor;
 
-	//valeurs des bordures la bordure y est fixe mais la bordure x s'adapte à la taille de la fenetre
+	//valeurs des bordures la bordure y est fixe mais la bordure x s'adapte ï¿½ la taille de la fenetre
 	private int BORDERX = 0;
 	private final static int BORDERY = 0;
 	
-	//élément relatifs à la carte de fond
+	//ï¿½lï¿½ment relatifs ï¿½ la carte de fond
 	private final ImageIcon MAP = new ImageIcon(getClass().getResource("/images/map_bg.jpg"));
 	private final int MAP_HEIGHT = MAP.getIconHeight();
 	private final int MAP_WIDTH = MAP.getIconWidth();
 	
-	//élément relatifs aux hexagones
+	//ï¿½lï¿½ment relatifs aux hexagones
 	private final int WIDTH_SIZE = 20; // board size x
 	private final int HEIGH_SIZE = 23; // board size y
 	private final int HEXSIZE = 70; // hex size in pixels
@@ -57,7 +57,7 @@ class BoardPanel extends JPanel {
 	int[][] board = new int[WIDTH_SIZE][HEIGH_SIZE];
 	
 	/**
-	 * Contructeur, il spécifie un écouteur de base et de mouvement pour les interactions de la souris sur le BoardPanel
+	 * Contructeur, il spï¿½cifie un ï¿½couteur de base et de mouvement pour les interactions de la souris sur le BoardPanel
 	 */
 	public BoardPanel(JFrame frame) {
 		
@@ -81,14 +81,14 @@ class BoardPanel extends JPanel {
 	}
 
 	/**
-	 * Méthode qui dessine le plateau
+	 * Mï¿½thode qui dessine le plateau
 	 * 
-	 * @param g Graphics élément graphique du plateau
+	 * @param g Graphics ï¿½lï¿½ment graphique du plateau
 	 */
 	public void paintComponent(Graphics g) {
 		frameWidth = frame.getWidth();
 		frame.setCursor(cursor);
-		// la grille sera décallée en fonction de la taille de l'écran pour bien
+		// la grille sera dï¿½callï¿½e en fonction de la taille de l'ï¿½cran pour bien
 		// s'ajuster avec la carte
 		if (frameWidth > MAP_WIDTH) {
 			BORDERX = (frameWidth - MAP_WIDTH) / 2;
@@ -130,7 +130,7 @@ class BoardPanel extends JPanel {
 		// dessin des hexagones
 		for (int i = 0; i < WIDTH_SIZE; i++) {
 			for (int j = 0; j < HEIGH_SIZE; j++) {
-				// l'avatar n'apparaitra qu'a la position qu'on lui a fixé
+				// l'avatar n'apparaitra qu'a la position qu'on lui a fixï¿½
 				if (i == avatarX && avatarY == j) {
 					HexagonalUtils.drawHex(i, j, g2, AVATAR);
 				} else {
@@ -142,14 +142,14 @@ class BoardPanel extends JPanel {
 	}
 
 	/**
-	 * Classe MouseListener qui écoute toutes les interactions faite par la souris sur le BoardPanel (déplacement clique ect..)
+	 * Classe MouseListener qui ï¿½coute toutes les interactions faite par la souris sur le BoardPanel (dï¿½placement clique ect..)
 	 * 
 	 * @author benoit
 	 *
 	 */
 	class MyMouseListener extends MouseAdapter {
 		/**
-		 * Un clique peut déplacer le personnage si la case est assez proche (1 case sans cheval, 2 cases avec cheval)
+		 * Un clique peut dï¿½placer le personnage si la case est assez proche (1 case sans cheval, 2 cases avec cheval)
 		 */
 		public void mouseClicked(MouseEvent e) {
 
@@ -157,7 +157,7 @@ class BoardPanel extends JPanel {
 			if (p.x < 0 || p.y < 0 || p.x >= WIDTH_SIZE || p.y >= HEIGH_SIZE)
 				return;
 
-			// les coordonnées de l'avatar sont celles a l'origine du clic de la souris
+			// les coordonnï¿½es de l'avatar sont celles a l'origine du clic de la souris
 			if (board[p.x][p.y] == 1) {
 				avatarX = p.x;
 				avatarY = p.y;
@@ -224,7 +224,7 @@ class BoardPanel extends JPanel {
 	}
 
 	/**
-	 * Cette méthode trouve les cases voisines autour du personnage
+	 * Cette mï¿½thode trouve les cases voisines autour du personnage
 	 * 
 	 * TODO : Prend en compte des voisins de rang 2 (avec cheval)
 	 * 

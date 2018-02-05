@@ -1,7 +1,5 @@
 package Game.Rules;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * RuleManager s'occupe d'appliquer les règles et mécaniques réutilisables
  *
@@ -36,6 +34,5 @@ public class RuleManager {
      * @param defender Character
      */
     public void attack(Character attacker, Character defender) {
-        throw new NotImplementedException();
     }
 }
