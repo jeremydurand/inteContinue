@@ -90,8 +90,8 @@ class BoardPanel extends JPanel {
 		frame.setCursor(cursor);
 		// la grille sera décallée en fonction de la taille de l'écran pour bien
 		// s'ajuster avec la carte
-		if (frameWidth > MAP_WIDTH) {
-			BORDERX = (frameWidth - MAP_WIDTH) / 2;
+		if (this.getWidth() > MAP_WIDTH) {
+			BORDERX = ((this.getWidth() - MAP_WIDTH) / 2)+20;
 			HexagonalUtils.setBorders(BORDERX, BORDERY);
 		} else {
 			BORDERX = 20;
