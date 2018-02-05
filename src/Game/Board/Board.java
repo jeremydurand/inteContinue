@@ -1,15 +1,9 @@
 package Game.Board;
 
 import java.awt.*;
-
 import javax.swing.*;
 
-import com.sun.xml.internal.ws.api.config.management.policy.ManagedServiceAssertion.NestedParameters;
-
-import oracle.jrockit.jfr.JFR;
-
 import java.awt.event.*;
-import java.util.Random;
 
 /**
  * Classe qui dessine le BoardPanel de jeu. Le mécanisme de gestion des
