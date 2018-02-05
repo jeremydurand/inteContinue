@@ -23,7 +23,7 @@ public class Board {
 	/**
 	 * Constructeur de la classe board initialisation des variables et création du plateau de jeu
 	 */
-	private Board() {
+	public Board() {
 		createAndShowGUI();
 	}
 

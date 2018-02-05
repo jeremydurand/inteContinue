@@ -1,5 +1,6 @@
 package Game;
 
+import Game.Events.EventManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -14,6 +15,18 @@ public class GameManager {
      * Singleton
      */
     private static GameManager manager;
+
+    /**
+     * EventManager
+     */
+    private EventManager eventManager;
+
+    /**
+     * Constructor
+     */
+    private GameManager() {
+        eventManager = new EventManager();
+    }
 
     /**
      * Instancie si ce n'est pas déjà fait le GameManager et retourne l'instance.
@@ -35,5 +48,14 @@ public class GameManager {
      */
     public void play() {
         throw new NotImplementedException();
+    }
+
+    /**
+     * Get eventManager
+     *
+     * @return EventManager
+     */
+    public EventManager getEventManager() {
+        return eventManager;
     }
 }
