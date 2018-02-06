@@ -14,6 +14,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import Game.GameManager;
+
+/**
+ * Cette classe gère l'animation du lancé de dés
+ * 
+ */
 public class DiceAnimation {
 	private int timeElapsed;
 	private int timeRandom;
@@ -27,15 +33,18 @@ public class DiceAnimation {
 	private JLabel numberLabel;
 	private JButton okay;
 	private boolean twoDices;
+	private GameManager manager;
 
 	/**
-	 * Cette classe gère l'animation du lancé de dés
+	 * Constructeur de la classe DiceAnimation
 	 * 
 	 * @param frame La fentre du jeu par dessus laquelle la boite de dialogue des dés s'affichera
 	 * @param twoDices Booléen indiquant si il y a un dés (false) ou deux (true)
 	 * @param icon L'icon du jeu
+	 * @param manager Le GameManager
 	 */
-	public DiceAnimation(JFrame frame, boolean twoDices, Icon icon) {
+	public DiceAnimation(JFrame frame, boolean twoDices, Icon icon, GameManager manager) {
+		this.manager = manager;
 		this.twoDices = twoDices;
 
 		dice1Label = new javax.swing.JLabel();
@@ -69,8 +78,10 @@ public class DiceAnimation {
 		okay.setEnabled(false);
 
 		roll();
+		//désactiver le bouton quitter
 		JOptionPane.showOptionDialog(frame, jPanel, "Jet de dés ...", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, icon, new Object[] { okay }, okay);
+		manager.doStep((random1 + random2));
 	}
 
 	/**
