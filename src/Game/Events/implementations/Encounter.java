@@ -28,7 +28,7 @@ public class Encounter implements Event{
                 //richesse-10
             }
             if (diceResult == 6){
-                //richesse-10
+                //richesse-20
             }
         }
         if (choiceEncounter == 2){ //ELUDER
