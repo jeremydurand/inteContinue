@@ -16,54 +16,55 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
 /**
  * Classe JPanel qui contient les hexagones et la carte en fond
  * 
  * @author benoit
  */
-class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel {
 
 	// déclarations des couleurs utilisées pour les tuiles
 	final static Color COLOURCELL = Color.ORANGE;
 	final static Color COLOURGRID = Color.BLACK;
 	final static Color COLOURRIGHT = Color.GREEN;
 	final static Color COLOURORWRONG = Color.RED;
-	
+
 	// par défaut le personnage apparait au coordonnées x0 y0
-	private int avatarX = 0;
-	private int avatarY = 0;
+	private int avatarX = -1;
+	private int avatarY = -1;
 	private final ImageIcon AVATAR = new ImageIcon(getClass().getResource("/images/avatar_dark.png"));
-	
-	//éléments relatifs à la fenetre
-	private JFrame frame; 
+
+	// éléments relatifs à la fenetre
+	private JFrame frame;
 	private int frameWidth;
 	private Cursor cursor;
 
-	//valeurs des bordures la bordure y est fixe mais la bordure x s'adapte à la taille de la fenetre
+	// valeurs des bordures la bordure y est fixe mais la bordure x s'adapte à la
+	// taille de la fenetre
 	private int BORDERX = 0;
 	private final static int BORDERY = 0;
-	
-	//élément relatifs à la carte de fond
+
+	// élément relatifs à la carte de fond
 	private final ImageIcon MAP = new ImageIcon(getClass().getResource("/images/map_bg.jpg"));
 	private final int MAP_HEIGHT = MAP.getIconHeight();
 	private final int MAP_WIDTH = MAP.getIconWidth();
-	
-	//élément relatifs aux hexagones
+
+	// élément relatifs aux hexagones
 	private final int WIDTH_SIZE = 20; // board size x
 	private final int HEIGH_SIZE = 23; // board size y
 	private final int HEXSIZE = 70; // hex size in pixels
 	private int neighbourRank = 1;
 	int[][] board = new int[WIDTH_SIZE][HEIGH_SIZE];
-	
+
 	/**
-	 * Contructeur, il spécifie un écouteur de base et de mouvement pour les interactions de la souris sur le BoardPanel
+	 * Contructeur, il spécifie un écouteur de base et de mouvement pour les
+	 * interactions de la souris sur le BoardPanel
 	 */
 	public BoardPanel(JFrame frame) {
-		
+
 		this.frame = frame;
-		
-		//initialisation des hexagones
+
+		// initialisation des hexagones
 		HexagonalUtils.setXYasVertex(true); // RECOMMENDED: leave this as FALSE.
 		HexagonalUtils.setHeight(HEXSIZE);// Either setHeight or setSize must be run to initialize the hex
 		for (int i = 0; i < WIDTH_SIZE; i++) {
@@ -71,7 +72,7 @@ class BoardPanel extends JPanel {
 				board[i][j] = -1;
 			}
 		}
-		
+
 		Dimension mapSize = new Dimension(MAP_WIDTH, MAP_HEIGHT);
 		this.setBorder(BorderFactory.createLineBorder(Color.red));
 		this.setPreferredSize(mapSize);
@@ -83,7 +84,8 @@ class BoardPanel extends JPanel {
 	/**
 	 * Méthode qui dessine le plateau
 	 * 
-	 * @param g Graphics élément graphique du plateau
+	 * @param g
+	 *            Graphics élément graphique du plateau
 	 */
 	public void paintComponent(Graphics g) {
 		frameWidth = frame.getWidth();
@@ -91,7 +93,7 @@ class BoardPanel extends JPanel {
 		// la grille sera décallée en fonction de la taille de l'écran pour bien
 		// s'ajuster avec la carte
 		if (this.getWidth() > MAP_WIDTH) {
-			BORDERX = ((this.getWidth() - MAP_WIDTH) / 2)+20;
+			BORDERX = ((this.getWidth() - MAP_WIDTH) / 2) + 20;
 			HexagonalUtils.setBorders(BORDERX, BORDERY);
 		} else {
 			BORDERX = 20;
@@ -118,7 +120,7 @@ class BoardPanel extends JPanel {
 			g2.drawImage(MAP.getImage(), x, y, null);
 		}
 
-		repaint();
+		// repaint();
 		for (int i = 0; i < WIDTH_SIZE; i++) {
 			for (int j = 0; j < HEIGH_SIZE; j++) {
 				if (board[i][j] != 0) {
@@ -141,15 +143,24 @@ class BoardPanel extends JPanel {
 		}
 	}
 
+	public void moveAvatar(int x, int y) {
+		avatarX = x;
+		avatarY = y;
+
+		repaint();
+	}
+
 	/**
-	 * Classe MouseListener qui écoute toutes les interactions faite par la souris sur le BoardPanel (déplacement clique ect..)
+	 * Classe MouseListener qui écoute toutes les interactions faite par la souris
+	 * sur le BoardPanel (déplacement clique ect..)
 	 * 
 	 * @author benoit
 	 *
 	 */
 	class MyMouseListener extends MouseAdapter {
 		/**
-		 * Un clique peut déplacer le personnage si la case est assez proche (1 case sans cheval, 2 cases avec cheval)
+		 * Un clique peut déplacer le personnage si la case est assez proche (1 case
+		 * sans cheval, 2 cases avec cheval)
 		 */
 		public void mouseClicked(MouseEvent e) {
 
@@ -159,10 +170,8 @@ class BoardPanel extends JPanel {
 
 			// les coordonnées de l'avatar sont celles a l'origine du clic de la souris
 			if (board[p.x][p.y] == 1) {
-				avatarX = p.x;
-				avatarY = p.y;
+				moveAvatar(p.x, p.y);
 			}
-
 			/*
 			 * JViewport viewPort = (JViewport)
 			 * SwingUtilities.getAncestorOfClass(JViewport.class, panel); if (viewPort !=
@@ -174,7 +183,7 @@ class BoardPanel extends JPanel {
 			 * panel.scrollRectToVisible(view); }
 			 */
 			// on redessine le BoardPanel avec la nouvelle position de l'avatar
-			repaint();
+
 		}
 
 		@Override
@@ -188,9 +197,11 @@ class BoardPanel extends JPanel {
 		}
 
 		/**
-		 * Mise a jour de l'affichage au niveau de la postion de la souris qui indique si un clique est possible ou non
+		 * Mise a jour de l'affichage au niveau de la postion de la souris qui indique
+		 * si un clique est possible ou non
 		 * 
-		 * @param e MouseEvent evenement de la souris
+		 * @param e
+		 *            MouseEvent evenement de la souris
 		 */
 		private void update(MouseEvent e) {
 			for (int i = 0; i < WIDTH_SIZE; i++) {
@@ -228,50 +239,54 @@ class BoardPanel extends JPanel {
 	 * 
 	 * TODO : Prend en compte des voisins de rang 2 (avec cheval)
 	 * 
-	 * @param x position x du personnage
-	 * @param y position y du personnage
-	 * @param n rang n de voisins a prendre en compte (1 sans cheval 2 avec)
+	 * @param x
+	 *            position x du personnage
+	 * @param y
+	 *            position y du personnage
+	 * @param n
+	 *            rang n de voisins a prendre en compte (1 sans cheval 2 avec)
 	 */
 	private void neighbour(int x, int y, int n) {
-
-		for (int i = 1; i <= n; i++) {
-			if (x % 2 == 0) {
-				if (x - i >= 0 && y - i >= 0) {
-					board[x - i][y - i] = 1;
-				}
-				if (y - i >= 0) {
-					board[x][y - i] = 1;
-				}
-				if (x + i < WIDTH_SIZE && y - i >= 0) {
-					board[x + i][y - i] = 1;
-				}
-				if (x + i < WIDTH_SIZE) {
-					board[x + i][y] = 1;
-				}
-				if (y + i < HEIGH_SIZE) {
-					board[x][y + i] = 1;
-				}
-				if (x - i >= 0) {
-					board[x - i][y] = 1;
-				}
-			} else {
-				if (x - i >= 0) {
-					board[x - i][y] = 1;
-				}
-				if (y - i >= 0) {
-					board[x][y - i] = 1;
-				}
-				if (x + i < WIDTH_SIZE) {
-					board[x + i][y] = 1;
-				}
-				if (x + i < WIDTH_SIZE && y + 1 < HEIGH_SIZE) {
-					board[x + i][y + 1] = 1;
-				}
-				if (y + i < HEIGH_SIZE) {
-					board[x][y + i] = 1;
-				}
-				if (x - i >= 0 && y + i < HEIGH_SIZE) {
-					board[x - i][y + i] = 1;
+		if (x != -1 && y != -1) {
+			for (int i = 1; i <= n; i++) {
+				if (x % 2 == 0) {
+					if (x - i >= 0 && y - i >= 0) {
+						board[x - i][y - i] = 1;
+					}
+					if (y - i >= 0) {
+						board[x][y - i] = 1;
+					}
+					if (x + i < WIDTH_SIZE && y - i >= 0) {
+						board[x + i][y - i] = 1;
+					}
+					if (x + i < WIDTH_SIZE) {
+						board[x + i][y] = 1;
+					}
+					if (y + i < HEIGH_SIZE) {
+						board[x][y + i] = 1;
+					}
+					if (x - i >= 0) {
+						board[x - i][y] = 1;
+					}
+				} else {
+					if (x - i >= 0) {
+						board[x - i][y] = 1;
+					}
+					if (y - i >= 0) {
+						board[x][y - i] = 1;
+					}
+					if (x + i < WIDTH_SIZE) {
+						board[x + i][y] = 1;
+					}
+					if (x + i < WIDTH_SIZE && y + 1 < HEIGH_SIZE) {
+						board[x + i][y + 1] = 1;
+					}
+					if (y + i < HEIGH_SIZE) {
+						board[x][y + i] = 1;
+					}
+					if (x - i >= 0 && y + i < HEIGH_SIZE) {
+						board[x - i][y + i] = 1;
+					}
 				}
 			}
 		}

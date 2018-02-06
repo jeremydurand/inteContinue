@@ -3,6 +3,8 @@ package Game.Board;
 import java.awt.*;
 import javax.swing.*;
 
+import Game.GameManager;
+
 import java.awt.event.*;
 
 /**
@@ -14,6 +16,8 @@ import java.awt.event.*;
  */
 public class Board extends JFrame {
 
+	private GameManager manager;
+	
 	private int screenWidth;
 	private int screenHeight;
 	private ImageIcon icon = new ImageIcon(getClass().getResource("/images/avatar_frame.png"));
@@ -24,32 +28,29 @@ public class Board extends JFrame {
 	private JLabel richesseLabel;
 	private final String RICHESSE = "Richesse : ";
 	private JButton btnLancer;
-	private final String LANCER = "LANCER";
+	private final String LANCER = "LANCER LES DES";
 	private JLabel princeLabel;
 	private final String JOUR = "Jour : ";
-	private JLabel jour;
+	private JLabel jourLabel;
 	private JFrame frame = this;
+
+	private BoardPanel panel;
+
+	public BoardPanel getPanel() {
+		return panel;
+	}
+
+	public void setPanel(BoardPanel panel) {
+		this.panel = panel;
+	}
 
 	/**
 	 * Constructeur de la classe board initialisation des variables et création du
 	 * plateau de jeu
 	 */
-	private Board() {
+	public Board(GameManager manager) {
+		this.manager = manager;
 		createAndShowGUI();
-	}
-
-	/**
-	 * Méthode de lancement, elle est a enlever car c'est le game manager qui
-	 * l'exécutera
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				new Board();
-			}
-		});
 	}
 
 	/**
@@ -73,7 +74,6 @@ public class Board extends JFrame {
 		this.setIconImage(icon.getImage());
 		// frame.setUndecorated(true);
 
-		// le panel c'est le BoardPanel de jeu (carte + grille + personnage)
 		JPanel barreInfos = new JPanel();
 		this.getContentPane().add(barreInfos, BorderLayout.NORTH);
 
@@ -97,7 +97,7 @@ public class Board extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new DiceAnimation(frame, false, icon);
+				new DiceAnimation(frame, false, icon, manager);
 			}
 		});
 
@@ -108,14 +108,16 @@ public class Board extends JFrame {
 		JLabel lblNewLabel = new JLabel("");
 		panel_1.add(lblNewLabel, BorderLayout.NORTH);
 
-		jour = new JLabel(JOUR);
-		panel_1.add(jour, BorderLayout.CENTER);
+		jourLabel = new JLabel(JOUR + manager.getDay());
+		panel_1.add(jourLabel, BorderLayout.CENTER);
 
 		JLabel lblNewLabel_2 = new JLabel("");
 		panel_1.add(lblNewLabel_2, BorderLayout.SOUTH);
 
-		BoardPanel panel = new BoardPanel(this);
-
+		// le panel c'est le BoardPanel de jeu (carte + grille + personnage)
+		panel = new BoardPanel(this);
+		manager.setPanel(panel);
+		
 		JScrollPane scroll = new JScrollPane(panel);
 
 		// déplacement avec les fleches de haut en bas
@@ -200,4 +202,49 @@ public class Board extends JFrame {
 		this.icon = icon;
 	}
 
+	public JLabel getCombatLabel() {
+		return combatLabel;
+	}
+
+	public void setCombatLabel(JLabel combatLabel) {
+		this.combatLabel = combatLabel;
+	}
+
+	public JLabel getEnduranceLabel() {
+		return enduranceLabel;
+	}
+
+	public void setEnduranceLabel(JLabel enduranceLabel) {
+		this.enduranceLabel = enduranceLabel;
+	}
+
+	public JLabel getRichesseLabel() {
+		return richesseLabel;
+	}
+
+	public void setRichesseLabel(JLabel richesseLabel) {
+		this.richesseLabel = richesseLabel;
+	}
+
+	public JLabel getPrinceLabel() {
+		return princeLabel;
+	}
+
+	public void setPrinceLabel(JLabel princeLabel) {
+		this.princeLabel = princeLabel;
+	}
+
+	public JLabel getJourLabel() {
+		return jourLabel;
+	}
+
+	public void setJourLabel(JLabel jourLabel) {
+		this.jourLabel = jourLabel;
+	}
+	
+	public void setDayText(int day) {
+		this.jourLabel.setText(JOUR + day);
+	}
+	
+	
 }
