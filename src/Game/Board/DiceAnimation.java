@@ -33,7 +33,6 @@ public class DiceAnimation {
 	private JLabel numberLabel;
 	private JButton okay;
 	private boolean twoDices;
-	private GameManager manager;
 
 	/**
 	 * Constructeur de la classe DiceAnimation
@@ -43,8 +42,7 @@ public class DiceAnimation {
 	 * @param icon L'icon du jeu
 	 * @param manager Le GameManager
 	 */
-	public DiceAnimation(JFrame frame, boolean twoDices, Icon icon, GameManager manager) {
-		this.manager = manager;
+	public DiceAnimation(JFrame frame, boolean twoDices, Icon icon) {
 		this.twoDices = twoDices;
 
 		dice1Label = new javax.swing.JLabel();
@@ -81,7 +79,8 @@ public class DiceAnimation {
 		//désactiver le bouton quitter
 		JOptionPane.showOptionDialog(frame, jPanel, "Jet de dés ...", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, icon, new Object[] { okay }, okay);
-		manager.doStep((random1 + random2));
+		GameManager.getInstance().doStep((random1 + random2));
+		//GameManager.getInstance().getBoard().getBtnLancer().setEnabled(false);
 	}
 
 	/**

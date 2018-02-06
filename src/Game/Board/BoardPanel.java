@@ -10,6 +10,8 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -143,9 +145,36 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Cette méthode va déplacé le personnage à des coordonnées x et y données
+	 * 
+	 * @param x
+	 *            La coordonnée x
+	 * @param y
+	 *            La coordonnée y
+	 */
 	public void moveAvatar(int x, int y) {
 		avatarX = x;
 		avatarY = y;
+
+		repaint();
+	}
+
+	/**
+	 * Cette méthode va déplacer le personnage sur une case aléatoire autour de lui
+	 */
+	public void moveToNeighbour() {
+		ArrayList<String> coordinates = new ArrayList<>();
+		for (int i = 0; i < WIDTH_SIZE; i++) {
+			for (int j = 0; j < HEIGH_SIZE; j++) {
+				if (board[i][j] == 1) {
+					coordinates.add(i + ";" + j);
+				}
+			}
+		}
+		int random = new Random().nextInt(coordinates.size());
+		avatarX = Integer.valueOf(coordinates.get(random).split(";")[0]);
+		avatarY = Integer.valueOf(coordinates.get(random).split(";")[1]);
 
 		repaint();
 	}
@@ -247,47 +276,47 @@ public class BoardPanel extends JPanel {
 	 *            rang n de voisins a prendre en compte (1 sans cheval 2 avec)
 	 */
 	private void neighbour(int x, int y, int n) {
-		if (x != -1 && y != -1) {
-			for (int i = 1; i <= n; i++) {
-				if (x % 2 == 0) {
-					if (x - i >= 0 && y - i >= 0) {
-						board[x - i][y - i] = 1;
-					}
-					if (y - i >= 0) {
-						board[x][y - i] = 1;
-					}
-					if (x + i < WIDTH_SIZE && y - i >= 0) {
-						board[x + i][y - i] = 1;
-					}
-					if (x + i < WIDTH_SIZE) {
-						board[x + i][y] = 1;
-					}
-					if (y + i < HEIGH_SIZE) {
-						board[x][y + i] = 1;
-					}
-					if (x - i >= 0) {
-						board[x - i][y] = 1;
-					}
-				} else {
-					if (x - i >= 0) {
-						board[x - i][y] = 1;
-					}
-					if (y - i >= 0) {
-						board[x][y - i] = 1;
-					}
-					if (x + i < WIDTH_SIZE) {
-						board[x + i][y] = 1;
-					}
-					if (x + i < WIDTH_SIZE && y + 1 < HEIGH_SIZE) {
-						board[x + i][y + 1] = 1;
-					}
-					if (y + i < HEIGH_SIZE) {
-						board[x][y + i] = 1;
-					}
-					if (x - i >= 0 && y + i < HEIGH_SIZE) {
-						board[x - i][y + i] = 1;
-					}
-				}
+		if (x == -1 || y == -1) {
+			return;
+		}
+		int i = n;
+		if (x % 2 == 0) {
+			if (x - i >= 0 && y - i >= 0) {
+				board[x - i][y - i] = 1;
+			}
+			if (y - i >= 0) {
+				board[x][y - i] = 1;
+			}
+			if (x + i < WIDTH_SIZE && y - i >= 0) {
+				board[x + i][y - i] = 1;
+			}
+			if (x + i < WIDTH_SIZE) {
+				board[x + i][y] = 1;
+			}
+			if (y + i < HEIGH_SIZE) {
+				board[x][y + i] = 1;
+			}
+			if (x - i >= 0) {
+				board[x - i][y] = 1;
+			}
+		} else {
+			if (x - i >= 0) {
+				board[x - i][y] = 1;
+			}
+			if (y - i >= 0) {
+				board[x][y - i] = 1;
+			}
+			if (x + i < WIDTH_SIZE) {
+				board[x + i][y] = 1;
+			}
+			if (x + i < WIDTH_SIZE && y + 1 < HEIGH_SIZE) {
+				board[x + i][y + 1] = 1;
+			}
+			if (y + i < HEIGH_SIZE) {
+				board[x][y + i] = 1;
+			}
+			if (x - i >= 0 && y + i < HEIGH_SIZE) {
+				board[x - i][y + i] = 1;
 			}
 		}
 	}

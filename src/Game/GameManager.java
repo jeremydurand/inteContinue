@@ -42,35 +42,56 @@ public class GameManager {
 	 * Fonction contrÃ´lant le dÃ©roulement d'un tour.
 	 */
 	public void play() {
-		setBoard(new Board(getInstance()));
+		new Board();
 		// throw new NotImplementedException();
 	}
 
+	/**
+	 * Cette méthode incrémente le numéro du jour et met à jour l'affichage du jour sur l'ihm
+	 */
 	public void dayIncrement() {
 		day++;
 		board.setDayText(day);
 	}
 
+	/**
+	 * Retourne le numéro du jour
+	 * 
+	 * @return le numéro du jour
+	 */
 	public int getDay() {
 		return day;
 	}
 
+	/**
+	 * Applique le numéro du jour
+	 * @param day le numéro du jour à appliquer
+	 */
 	public void setDay(int day) {
 		this.day = day;
 	}
 
+	/**
+	 * Cette méthode va permettre de choisir le bon événement à exécuter
+	 * @param des le numéro de l'événement
+	 */
 	public void doStep(int des) {
 		switch (step) {
 		case 0:
 			step0(des);
 			break;
-
+		case 1:
+			step1();
 		default:
 			break;
 		}
 
 	}
 
+	/**
+	 * L'étape 1 : le placement du joueur sur la carte
+	 * @param des
+	 */
 	private void step0(int des) {
 		switch (des) {
 		case 1:
@@ -100,20 +121,47 @@ public class GameManager {
 		default:
 			break;
 		}
+		step++;
 	}
 
+	/**
+	 * Cette méthode fait bouger le personnage sur une case aléatoire se trouvant autour de lui
+	 */
+	private void step1() {
+		panel.moveToNeighbour();
+	}
+	
+	/**
+	 * Retourne le plateau de jeu
+	 * 
+	 * @returnle plateau de jeu
+	 */
 	public BoardPanel getPanel() {
 		return panel;
 	}
 
+	/**
+	 * Définit le plateau de jeu
+	 * @param panel le plateau de jeu à définir
+	 */
 	public void setPanel(BoardPanel panel) {
 		this.panel = panel;
 	}
 
+	/**
+	 * Retourne la fenetre principale du jeu
+	 * 
+	 * @return la fenetre principale
+	 */
 	public Board getBoard() {
 		return board;
 	}
 
+	/**
+	 * Définit la fenetre principale
+	 * 
+	 * @param board la fenetre principale a definir
+	 */
 	public void setBoard(Board board) {
 		this.board = board;
 	}

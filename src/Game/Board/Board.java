@@ -16,8 +16,6 @@ import java.awt.event.*;
  */
 public class Board extends JFrame {
 
-	private GameManager manager;
-	
 	private int screenWidth;
 	private int screenHeight;
 	private ImageIcon icon = new ImageIcon(getClass().getResource("/images/avatar_frame.png"));
@@ -48,8 +46,7 @@ public class Board extends JFrame {
 	 * Constructeur de la classe board initialisation des variables et création du
 	 * plateau de jeu
 	 */
-	public Board(GameManager manager) {
-		this.manager = manager;
+	public Board() {
 		createAndShowGUI();
 	}
 
@@ -97,7 +94,7 @@ public class Board extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new DiceAnimation(frame, false, icon, manager);
+				new DiceAnimation(frame, false, icon);
 			}
 		});
 
@@ -108,7 +105,7 @@ public class Board extends JFrame {
 		JLabel lblNewLabel = new JLabel("");
 		panel_1.add(lblNewLabel, BorderLayout.NORTH);
 
-		jourLabel = new JLabel(JOUR + manager.getDay());
+		jourLabel = new JLabel(JOUR + GameManager.getInstance().getDay());
 		panel_1.add(jourLabel, BorderLayout.CENTER);
 
 		JLabel lblNewLabel_2 = new JLabel("");
@@ -116,8 +113,6 @@ public class Board extends JFrame {
 
 		// le panel c'est le BoardPanel de jeu (carte + grille + personnage)
 		panel = new BoardPanel(this);
-		manager.setPanel(panel);
-		
 		JScrollPane scroll = new JScrollPane(panel);
 
 		// déplacement avec les fleches de haut en bas
@@ -192,6 +187,9 @@ public class Board extends JFrame {
 
 		this.getContentPane().add(scroll, BorderLayout.CENTER);
 		this.setVisible(true);
+		GameManager.getInstance().setPanel(panel);
+		GameManager.getInstance().setBoard(this);
+		JOptionPane.showMessageDialog(this, "Bonjour, pour démarrer la partie veuillez lancer les dés", "Bienvenue sur Barbarian Prince", JOptionPane.INFORMATION_MESSAGE, icon);
 	}
 
 	public ImageIcon getIcon() {
@@ -244,6 +242,14 @@ public class Board extends JFrame {
 	
 	public void setDayText(int day) {
 		this.jourLabel.setText(JOUR + day);
+	}
+
+	public JButton getBtnLancer() {
+		return btnLancer;
+	}
+
+	public void setBtnLancer(JButton btnLancer) {
+		this.btnLancer = btnLancer;
 	}
 	
 	
