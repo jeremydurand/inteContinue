@@ -1,35 +1,46 @@
 package Game.Board;
 
 import java.awt.*;
-
 import javax.swing.*;
 
 import java.awt.event.*;
-import java.awt.Point;
 
 /**
- * Classe qui dessine le BoardPanel de jeu. 
- *
- * Le mÃ©canisme de gestion des hexagones se trouve dans le fichier HexagonalUtils.java
+ * Classe qui dessine le BoardPanel de jeu. Le mécanisme de gestion des
+ * hexagones se trouve dans le fichier HexagonalUtils.java
  * 
- * @author benoit
+ * @author benoi
+ *
  */
-public class Board {
+public class Board extends JFrame {
 
 	private int screenWidth;
 	private int screenHeight;
 	private ImageIcon icon = new ImageIcon(getClass().getResource("/images/avatar_frame.png"));
+	private JLabel combatLabel;
+	private final String COMBAT = "Combat : ";
+	private JLabel enduranceLabel;
+	private final String ENDURANCE = "Endurance : ";
+	private JLabel richesseLabel;
+	private final String RICHESSE = "Richesse : ";
+	private JButton btnLancer;
+	private final String LANCER = "LANCER";
+	private JLabel princeLabel;
+	private final String JOUR = "Jour : ";
+	private JLabel jour;
+	private JFrame frame = this;
 
 	/**
-	 * Constructeur de la classe board initialisation des variables et crÃ©ation du plateau de jeu
+	 * Constructeur de la classe board initialisation des variables et création du
+	 * plateau de jeu
 	 */
 	private Board() {
 		createAndShowGUI();
 	}
 
 	/**
-	 * MÃ©thode de lancement, elle est a enlever car c'est le game manager qui
-	 * l'exÃ©cutera
+	 * Méthode de lancement, elle est a enlever car c'est le game manager qui
+	 * l'exécutera
 	 * 
 	 * @param args
 	 */
@@ -42,46 +53,86 @@ public class Board {
 	}
 
 	/**
-	 * CrÃ©ation de l'interface
+	 * Création de l'interface
 	 */
 	private void createAndShowGUI() {
 
-		JFrame frame = new JFrame("Barbarian Prince");
+		new JFrame("Barbarian Prince");
 
-		// paramÃ©trage de la fenetre
+		// paramétrage de la fenetre
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
+		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(this.getGraphicsConfiguration());
 		int taskBarSize = scnMax.bottom;
 		screenWidth = (int) screenSize.getWidth();
 		screenHeight = (int) screenSize.getHeight() - taskBarSize;
-		frame.setBounds(100, 100, screenWidth, screenHeight);
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(true);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setIconImage(icon.getImage());
+		this.setBounds(100, 100, screenWidth, screenHeight);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(true);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setIconImage(icon.getImage());
 		// frame.setUndecorated(true);
 
 		// le panel c'est le BoardPanel de jeu (carte + grille + personnage)
-		BoardPanel panel = new BoardPanel(frame);
+		JPanel barreInfos = new JPanel();
+		this.getContentPane().add(barreInfos, BorderLayout.NORTH);
+
+		princeLabel = new JLabel();
+		princeLabel.setIcon(icon);
+		barreInfos.add(princeLabel);
+
+		combatLabel = new JLabel(COMBAT);
+		barreInfos.add(combatLabel);
+
+		enduranceLabel = new JLabel(ENDURANCE);
+		barreInfos.add(enduranceLabel);
+
+		richesseLabel = new JLabel(RICHESSE);
+		barreInfos.add(richesseLabel);
+
+		btnLancer = new JButton(LANCER);
+		barreInfos.add(btnLancer);
+
+		btnLancer.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new DiceAnimation(frame, false, icon);
+			}
+		});
+
+		JPanel panel_1 = new JPanel();
+		this.getContentPane().add(panel_1, BorderLayout.EAST);
+		panel_1.setLayout(new BorderLayout(0, 0));
+
+		JLabel lblNewLabel = new JLabel("");
+		panel_1.add(lblNewLabel, BorderLayout.NORTH);
+
+		jour = new JLabel(JOUR);
+		panel_1.add(jour, BorderLayout.CENTER);
+
+		JLabel lblNewLabel_2 = new JLabel("");
+		panel_1.add(lblNewLabel_2, BorderLayout.SOUTH);
+
+		BoardPanel panel = new BoardPanel(this);
 
 		JScrollPane scroll = new JScrollPane(panel);
 
-		// dÃ©placement avec les fleches de haut en bas
+		// déplacement avec les fleches de haut en bas
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		vertical.setUnitIncrement(16);
 		InputMap imV = vertical.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imV.put(KeyStroke.getKeyStroke("DOWN"), "positiveUnitIncrement");
 		imV.put(KeyStroke.getKeyStroke("UP"), "negativeUnitIncrement");
 
-		// dÃ©placement avec les fleches de gauche a droite
+		// déplacement avec les fleches de gauche a droite
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
 		horizontal.setUnitIncrement(16);
 		InputMap imH = horizontal.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imH.put(KeyStroke.getKeyStroke("RIGHT"), "positiveUnitIncrement");
 		imH.put(KeyStroke.getKeyStroke("LEFT"), "negativeUnitIncrement");
 
-		// le mouse drag pour se dÃ©placer sur la carte
+		// le mouse drag pour se déplacer sur la carte
 		MouseAdapter ma = new MouseAdapter() {
 
 			private Point origin;
@@ -116,9 +167,9 @@ public class Board {
 
 		panel.addMouseListener(ma);
 		panel.addMouseMotionListener(ma);
-		
-		// un listener pour rÃ©agir en cas de changement de la taille de la fenetre
-		frame.addComponentListener(new ComponentListener() {
+
+		// un listener pour réagir en cas de changement de la taille de la fenetre
+		this.addComponentListener(new ComponentListener() {
 			@Override
 			public void componentHidden(ComponentEvent arg0) {
 			}
@@ -136,9 +187,17 @@ public class Board {
 			public void componentShown(ComponentEvent arg0) {
 			}
 		});
-		
-		frame.getContentPane().add(scroll);
-		frame.setVisible(true);
+
+		this.getContentPane().add(scroll, BorderLayout.CENTER);
+		this.setVisible(true);
+	}
+
+	public ImageIcon getIcon() {
+		return icon;
+	}
+
+	public void setIcon(ImageIcon icon) {
+		this.icon = icon;
 	}
 
 }
