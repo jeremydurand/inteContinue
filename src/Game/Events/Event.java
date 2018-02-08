@@ -6,5 +6,5 @@ package Game.Events;
 public interface Event {
 
     // Fonction permettant de déclencher l'événement.
-    void trigger();
+    void trigger(Game.Character character, int choiceEncounter);
 }

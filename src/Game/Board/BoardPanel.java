@@ -18,6 +18,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Game.GameManager;
+
 /**
  * Classe JPanel qui contient les hexagones et la carte en fond
  * 
@@ -198,8 +200,10 @@ public class BoardPanel extends JPanel {
 				return;
 
 			// les coordonnées de l'avatar sont celles a l'origine du clic de la souris
-			if (board[p.x][p.y] == 1) {
+			if (board[p.x][p.y] == 1 && GameManager.getInstance().isCanMove()) {
 				moveAvatar(p.x, p.y);
+				//mettre event random
+				GameManager.getInstance().meet();
 			}
 			/*
 			 * JViewport viewPort = (JViewport)
@@ -245,7 +249,11 @@ public class BoardPanel extends JPanel {
 			if (p.x == avatarX && p.y == avatarY) {
 				cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 			} else if (board[p.x][p.y] == 1) {
-				cursor = new Cursor(Cursor.HAND_CURSOR);
+				if(GameManager.getInstance().isCanMove()) {					
+					cursor = new Cursor(Cursor.HAND_CURSOR);
+				}else {
+					cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+				}
 			} else {
 				board[p.x][p.y] = 0;
 				cursor = new Cursor(Cursor.DEFAULT_CURSOR);

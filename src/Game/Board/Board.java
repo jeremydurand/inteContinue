@@ -19,6 +19,7 @@ public class Board extends JFrame {
 	private int screenWidth;
 	private int screenHeight;
 	private ImageIcon icon = new ImageIcon(getClass().getResource("/images/avatar_frame.png"));
+	private ImageIcon enemyIcon = new ImageIcon(getClass().getResource("/images/versus.png"));
 	private JLabel combatLabel;
 	private final String COMBAT = "Combat : ";
 	private JLabel enduranceLabel;
@@ -27,12 +28,18 @@ public class Board extends JFrame {
 	private final String RICHESSE = "Richesse : ";
 	private JButton btnLancer;
 	private final String LANCER = "LANCER LES DES";
+	private final String OPPOSANT = "Opposant : ";
 	private JLabel princeLabel;
 	private final String JOUR = "Jour : ";
 	private JLabel jourLabel;
 	private JFrame frame = this;
 
 	private BoardPanel panel;
+	private JLabel enemyLabel;
+	private JLabel enemyCombatLabel;
+	private JLabel enemyEnduranceLabel;
+	private JLabel enemyRichesseLabel;
+	private JLabel enemy;
 
 	public BoardPanel getPanel() {
 		return panel;
@@ -55,8 +62,7 @@ public class Board extends JFrame {
 	 */
 	private void createAndShowGUI() {
 
-		new JFrame("Barbarian Prince");
-
+		this.setTitle("Barbarian Prince");
 		// paramétrage de la fenetre
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(this.getGraphicsConfiguration());
@@ -90,11 +96,28 @@ public class Board extends JFrame {
 		btnLancer = new JButton(LANCER);
 		barreInfos.add(btnLancer);
 
+		enemyLabel = new JLabel();
+		enemyLabel.setIcon(enemyIcon);
+		barreInfos.add(enemyLabel);
+
+		enemyCombatLabel = new JLabel(COMBAT);
+		barreInfos.add(enemyCombatLabel);
+
+		enemyEnduranceLabel = new JLabel(ENDURANCE);
+		barreInfos.add(enemyEnduranceLabel);
+
+		enemyRichesseLabel = new JLabel(RICHESSE);
+		barreInfos.add(enemyRichesseLabel);
+
+		enemy = new JLabel(OPPOSANT);
+		barreInfos.add(enemy);
+		
 		btnLancer.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new DiceAnimation(frame, false, icon);
+				new DiceAnimation(frame, GameManager.getInstance().isTwoDice(), icon,
+						GameManager.getInstance().getDiceLimit());
 			}
 		});
 
@@ -189,7 +212,9 @@ public class Board extends JFrame {
 		this.setVisible(true);
 		GameManager.getInstance().setPanel(panel);
 		GameManager.getInstance().setBoard(this);
-		JOptionPane.showMessageDialog(this, "Bonjour, pour démarrer la partie veuillez lancer les dés", "Bienvenue sur Barbarian Prince", JOptionPane.INFORMATION_MESSAGE, icon);
+		GameManager.getInstance().init();
+		JOptionPane.showMessageDialog(this, "Bonjour, pour démarrer la partie veuillez lancer les dés",
+				"Bienvenue sur Barbarian Prince", JOptionPane.INFORMATION_MESSAGE, icon);
 	}
 
 	public ImageIcon getIcon() {
@@ -208,6 +233,10 @@ public class Board extends JFrame {
 		this.combatLabel = combatLabel;
 	}
 
+	public void setAttackLabel(int attack) {
+		this.combatLabel.setText(COMBAT + attack);
+	}
+
 	public JLabel getEnduranceLabel() {
 		return enduranceLabel;
 	}
@@ -216,12 +245,20 @@ public class Board extends JFrame {
 		this.enduranceLabel = enduranceLabel;
 	}
 
+	public void setLifeLabel(int life) {
+		this.enduranceLabel.setText(ENDURANCE + life);
+	}
+
 	public JLabel getRichesseLabel() {
 		return richesseLabel;
 	}
 
 	public void setRichesseLabel(JLabel richesseLabel) {
 		this.richesseLabel = richesseLabel;
+	}
+
+	public void setGoldLabel(int richesse) {
+		this.richesseLabel.setText(RICHESSE + richesse);
 	}
 
 	public JLabel getPrinceLabel() {
@@ -239,7 +276,7 @@ public class Board extends JFrame {
 	public void setJourLabel(JLabel jourLabel) {
 		this.jourLabel = jourLabel;
 	}
-	
+
 	public void setDayText(int day) {
 		this.jourLabel.setText(JOUR + day);
 	}
@@ -251,6 +288,59 @@ public class Board extends JFrame {
 	public void setBtnLancer(JButton btnLancer) {
 		this.btnLancer = btnLancer;
 	}
+
+	public JLabel getEnemyLabel() {
+		return enemyLabel;
+	}
+
+	public void setEnemyLabel(JLabel enemyLabel) {
+		this.enemyLabel = enemyLabel;
+	}
+
+	public JLabel getEnemyCombatLabel() {
+		return enemyCombatLabel;
+	}
+
+	public void setEnemyCombatLabel(JLabel enemyCombatLabel) {
+		this.enemyCombatLabel = enemyCombatLabel;
+	}
+
+	public JLabel getEnemyEnduranceLabel() {
+		return enemyEnduranceLabel;
+	}
+
+	public void setEnemyEnduranceLabel(JLabel enemyEnduranceLabel) {
+		this.enemyEnduranceLabel = enemyEnduranceLabel;
+	}
+
+	public JLabel getEnemyRichesseLabel() {
+		return enemyRichesseLabel;
+	}
+
+	public void setEnemyLifeText(int life) {
+		enemyEnduranceLabel.setText(ENDURANCE + life);
+	}
+
+	public void setEnemyAttackText(int attack) {
+		enemyCombatLabel.setText(COMBAT + attack);
+	}
+
+	public void setEnemyGoldText(int gold) {
+		enemyRichesseLabel.setText(RICHESSE + gold);
+	}
+
+	public void setEnemyName(String name) {
+		enemy.setText(OPPOSANT + name);
+	}
+	public void resetOpponent() {
+		enemyEnduranceLabel.setText(ENDURANCE);
+		enemyCombatLabel.setText(COMBAT);
+		enemyRichesseLabel.setText(RICHESSE );
+		enemy.setText(OPPOSANT);
+	}
 	
-	
+	public void setEnemyRichesseLabel(JLabel enemyRichesseLabel) {
+		this.enemyRichesseLabel = enemyRichesseLabel;
+	}
+
 }

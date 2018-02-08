@@ -33,6 +33,7 @@ public class DiceAnimation {
 	private JLabel numberLabel;
 	private JButton okay;
 	private boolean twoDices;
+	private int limit;
 
 	/**
 	 * Constructeur de la classe DiceAnimation
@@ -42,9 +43,10 @@ public class DiceAnimation {
 	 * @param icon L'icon du jeu
 	 * @param manager Le GameManager
 	 */
-	public DiceAnimation(JFrame frame, boolean twoDices, Icon icon) {
+	public DiceAnimation(JFrame frame, boolean twoDices, Icon icon, int limit) {
 		this.twoDices = twoDices;
-
+		this.limit = limit;
+		
 		dice1Label = new javax.swing.JLabel();
 		dice2Label = new javax.swing.JLabel();
 
@@ -79,7 +81,9 @@ public class DiceAnimation {
 		//désactiver le bouton quitter
 		JOptionPane.showOptionDialog(frame, jPanel, "Jet de dés ...", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, icon, new Object[] { okay }, okay);
-		GameManager.getInstance().doStep((random1 + random2));
+		GameManager.getInstance().setThrown(false);
+		GameManager.getInstance().setDiceResult((random1 + random2));
+		GameManager.getInstance().doStep();
 		//GameManager.getInstance().getBoard().getBtnLancer().setEnabled(false);
 	}
 
@@ -113,11 +117,11 @@ public class DiceAnimation {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				random1 = new Random().nextInt(6) + 1;
+				random1 = new Random().nextInt(limit) + 1;
 				dice1Label.setIcon(
 						new javax.swing.ImageIcon(getClass().getResource("/images/dice/dice" + random1 + ".jpg")));
 				if (twoDices) {
-					random2 = new Random().nextInt(6) + 1;
+					random2 = new Random().nextInt(limit) + 1;
 					dice2Label.setIcon(
 							new javax.swing.ImageIcon(getClass().getResource("/images/dice/dice" + random2 + ".jpg")));
 				}
@@ -140,4 +144,14 @@ public class DiceAnimation {
 			okay.setEnabled(true);
 		}
 	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+	
+	
 }
